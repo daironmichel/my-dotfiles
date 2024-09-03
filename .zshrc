@@ -46,7 +46,7 @@ zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
 
 # Add in snippets
-# zinit snippet OMZP::git
+zinit snippet OMZP::git-prompt
 # zinit snippet OMZP::sudo
 # zinit snippet OMZP::archlinux
 # zinit snippet OMZP::aws
@@ -106,13 +106,13 @@ export PATH="$PATH:$CODE_HOME/Contents/Resources/app/bin"
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
-# add poetry
-export POETRY_HOME="$HOME/.poetry"
-export PATH="$POETRY_HOME/bin:$PATH"
-
 # add pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
+
+# add poetry
+export POETRY_HOME="$HOME/.poetry"
+export PATH="$POETRY_HOME/bin:$PATH"
 
 # Shell integrations
 eval "$(fzf --zsh)"
