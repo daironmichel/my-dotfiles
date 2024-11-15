@@ -3,7 +3,7 @@
 1. Install dependencies.
 
 ```shell
-brew install ripgrep fd fzf zoxide git lazygit pyenv poetry volta stow luarocks neovim
+brew install ripgrep fd fzf zoxide git lazygit pyenv poetry volta stow luarocks neovim jq bat yazi startship ical-buddy
 volta install node pnpm
 npm install -g neovim
 pyenv install 3.12  # or the version you want

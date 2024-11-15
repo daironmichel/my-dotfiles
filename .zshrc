@@ -1,23 +1,4 @@
-# Enable git info to show in command prompt
-autoload -Uz vcs_info
-zstyle ':vcs_info:git:*' formats '[%b] '
-precmd() { 
-  vcs_info 
-}
-
-# Enable prompt substitution
-setopt PROMPT_SUBST
-
-# Custom prompt
-NEWLINE=$'\n'
-CODE_ICON=$'\ue795'
-PROMPT_SEPARATOR="%F{0}${CODE_ICON} ---------------------------------------%f${NEWLINE}"
-PROMPT_INFO="%F{blue}%~%f %F{red}${vcs_info_msg_0_}%f${NEWLINE}"
-PROMPT_INDICATOR="%F{red}❯%F{yellow}❯%F{green}❯ "
-PROMPT=$'${PROMPT_SEPARATOR}${PROMPT_INFO}${PROMPT_INDICATOR}'
-
 # Add homebrew apps to the path
-# NOTE: this is also in .zprofile not sure if can cause duplication problems
 if [ "$(arch)" = "arm64" ]; then
   eval $(/opt/homebrew/bin/brew shellenv);
 else
@@ -62,6 +43,15 @@ zinit cdreplay -q
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+ 
+# Load starship theme
+# line 1: `starship` binary as command, from github release
+# line 2: starship setup at clone(create init.zsh, completion)
+# line 3: pull behavior same as clone, source init.zsh
+zinit ice as"command" from"gh-r" \
+          atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
+          atpull"%atclone" src"init.zsh"
+zinit light starship/starship
 
 # Keybindings
 bindkey '^p' history-search-backward 
@@ -162,6 +152,30 @@ alias gst='git stash'
 alias gsp='git stash pop'
 alias ga='git add'
 alias gaa='git add .'
-gd() {
+function gd() {
   git diff $1^!
+}
+
+alias wt='git worktree'
+alias wta='git worktree add'
+alias wtl='git worktree list'
+alias wtr='git worktree remove'
+
+function gb-prune() {
+  echo "updating all refs"
+  git fetch --all
+  echo "clean up remote refs"
+  git remote show | xargs git remote prune
+  echo "deleting local story branches"
+  git branch --merged | egrep -v "(^\*|master|main|dev|feature)" | xargs git branch -d
+  echo "done!"
+}
+
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
 }
